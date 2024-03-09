@@ -34,13 +34,6 @@ public class UsuarioRepositoryTest extends AbstractIntegrationDBTest{
                 .password("123")
                 .build();
         usuarioRepository.save(usuario);
-
-        Usuario usuario2 = Usuario.builder().nombre("Juan")
-                .apellidos("Perez")
-                .username("juanPerez")
-                .password("456")
-                .build();
-        usuarioRepository.save(usuario2);
         usuarioRepository.flush();
     }
 
@@ -64,5 +57,57 @@ public class UsuarioRepositoryTest extends AbstractIntegrationDBTest{
         Usuario userSaved = usuarioRepository.save(usuario);
         //then
         assertThat(userSaved.getId()).isNotNull();
+    }
+    
+    @Test
+    void givenAnUser_whenGetReferenceById_thenGetUserWithId(){
+        //given
+        Usuario usuarioPruebaGet=Usuario.builder()
+                .nombre("Pablo")
+                .apellidos("Barrera")
+                .username("pbarrera")
+                .email("barrera123@gmail.com")
+                .password("12345")
+                .build();
+        usuarioRepository.save(usuarioPruebaGet);
+        //when 
+        Usuario usuarioObtenido=usuarioRepository.getReferenceById(usuarioPruebaGet.getId());
+
+        //then
+        assertThat(usuarioObtenido.getId()).isNotNull();
+        assertThat(usuarioObtenido.getId()).isEqualTo(usuarioPruebaGet.getId());
+    }
+
+    @Test
+    void givenAnUser_whenDelete_thenCountUserIsZero(){
+        //given 
+        Usuario usuarioPruebaDelete=Usuario.builder()
+                .nombre("Pablo")
+                .apellidos("Barrera")
+                .username("pbarrera")
+                .email("barrera123@gmail.com")
+                .password("12345")
+                .build();
+        usuarioRepository.save(usuarioPruebaDelete);
+        //when 
+        usuarioRepository.deleteById(usuarioPruebaDelete.getId()); 
+        //then
+        assertThat(usuarioRepository.count()).isZero();
+    }
+
+    @Test
+    void givenAnUser_whenUpdate_thenUserUsernameIsEqualsTo(){
+        Usuario usuarioPruebaUpdate=Usuario.builder()
+                .nombre("Pablo")
+                .apellidos("Barrera")
+                .username("pbarrera")
+                .email("barrera123@gmail.com")
+                .password("12345")
+                .build();
+        usuarioRepository.save(usuarioPruebaUpdate);
+        //when 
+        usuarioRepository.updateUsernameById(usuarioPruebaUpdate.getId(), "nuevoUsername");
+        //then
+        assertThat(usuarioRepository.getReferenceById(usuarioPruebaUpdate.getId()).getUsername()).isEqualTo("nuevoUsername");
     }
 }

@@ -67,4 +67,60 @@ public class PartidaRepositoryTest extends AbstractIntegrationDBTest{
         assertThat(partidaSaved.getId()).isNotNull();
     }
 
+    @Test
+    void givenAnDeparture_whenGetReferenceById_thenGetDepartureWithId(){
+        //given
+        Partida partidaPruebaGet=Partida.builder()
+                .creador("Wilkin")
+                .deporte("Futbol")
+                .ciudad("Santa marta")
+                 .provincia("Gaira")
+                 .participantes(22)
+                  .suplentes(6)
+                   .comentarios("Primer partido de la temporada")
+                .build();
+        partidaRepository.save(partidaPruebaGet);
+        //when 
+        Partida partidaObtenido=partidaRepository.getReferenceById(partidaPruebaGet.getId());
+        //then
+        assertThat(partidaObtenido.getId()).isNotNull();
+        assertThat(partidaObtenido.getId()).isEqualTo(partidaPruebaGet.getId());
+    }
+
+    @Test
+    void givenAnDeparture_whenDelete_thenCountDepartureIsZero(){
+        //given 
+        Partida partidaPruebaDelete=Partida.builder()
+                .creador("Wilkin")
+                .deporte("Futbol")
+                .ciudad("Santa marta")
+                .provincia("Gaira")
+                .participantes(22)
+                .suplentes(6)
+                 .comentarios("Primer partido de la temporada") 
+               .build();
+        partidaRepository.save(partidaPruebaDelete);
+        //when 
+        partidaRepository.deleteById(partidaPruebaDelete.getId()); 
+        //then
+        assertThat(partidaRepository.count()).isZero();
+    }
+
+    @Test
+    void givenAnDeparture_whenUpdate_thenDepartureNuevoCreadorIsEqualsTo(){
+      Partida partidaPruebaUpdate=Partida.builder()
+                .creador("Wilkin")
+                .deporte("Futbol")
+                .ciudad("Santa marta")
+                .provincia("Gaira")
+                .participantes(22)
+                .suplentes(6)
+                 .comentarios("Primer partido de la temporada")
+              .build();
+        partidaRepository.save(partidaPruebaUpdate);
+        //when 
+        partidaRepository.updateCreadorById(partidaPruebaUpdate.getId(), "nuevoCreador");
+        //then
+        assertThat(partidaRepository.getReferenceById(partidaPruebaUpdate.getId()).getCreador()).isEqualTo("nuevaCreador");
+    }
 }

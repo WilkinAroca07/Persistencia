@@ -57,4 +57,43 @@ public class SugerenciaRepositoryTest extends AbstractIntegrationDBTest{
         //then
         assertThat(sugerenciaSaved.getId()).isNotNull();
     }
+
+    @Test
+    void givenAnSuggestion_whenGetReferenceById_thenGetSuggestionWithId(){
+        //given
+        Sugerencia sugerenciaPruebaGet=Sugerencia.builder()
+                   .descripcion("realización de la prueba 1")
+                .build();
+        sugerenciaRepository.save(sugerenciaPruebaGet);
+        //when 
+        Sugerencia sugerenciaObtenido=sugerenciaRepository.getReferenceById(sugerenciaPruebaGet.getId());
+        //then
+        assertThat(sugerenciaObtenido.getId()).isNotNull();
+        assertThat(sugerenciaObtenido.getId()).isEqualTo(sugerenciaPruebaGet.getId());
+    }
+
+    @Test
+    void givenAnSuggestion_whenDelete_thenCountSuggestionIsZero(){
+        //given 
+        Sugerencia sugerenciaPruebaDelete=Sugerencia.builder()
+                 .descripcion("Probar eliminación de sugerencia 1") 
+               .build();
+        sugerenciaRepository.save(sugerenciaPruebaDelete);
+        //when 
+        sugerenciaRepository.deleteById(sugerenciaPruebaDelete.getId()); 
+        //then
+        assertThat(sugerenciaRepository.count()).isZero();
+    }
+
+    @Test
+    void givenAnSuggestion_whenUpdate_thenSuggestionDescripcionIsEqualsTo(){
+        Sugerencia sugerenciaPruebaUpdate=Sugerencia.builder()
+             .descripcion("Actualizacion de descripcion 1")
+              .build();
+        sugerenciaRepository.save(sugerenciaPruebaUpdate);
+        //when 
+        sugerenciaRepository.updateDescripcionById(sugerenciaPruebaUpdate.getId(), "nuevaDescripcion");
+        //then
+        assertThat(sugerenciaRepository.getReferenceById(sugerenciaPruebaUpdate.getId()).getDescripcion()).isEqualTo("nuevaDescripcion");
+    }
 }    

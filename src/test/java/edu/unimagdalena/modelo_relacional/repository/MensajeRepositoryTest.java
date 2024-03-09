@@ -62,5 +62,48 @@ public class MensajeRepositoryTest extends AbstractIntegrationDBTest{
         assertThat(mensajeSaved.getId()).isNotNull();
     }
 
+    @Test
+    void givenAnMessage_whenGetReferenceById_thenGetMessageWithId(){
+        //given
+        Mensaje mensajePruebaGet=Mensaje.builder()
+                .creador("Pablo")
+                .destinatario("Wilkin")
+                .contenido("Primera prueba ")
+                .build();
+        mensajeRepository.save(mensajePruebaGet);
+        //when 
+        Mensaje mensajeObtenido=mensajeRepository.getReferenceById(mensajePruebaGet.getId());
+        //then
+        assertThat(mensajeObtenido.getId()).isNotNull();
+        assertThat(mensajeObtenido.getId()).isEqualTo(mensajePruebaGet.getId());
+    }
+
+    @Test
+    void givenAnMessage_whenDelete_thenCountMenssageIsZero(){
+        //given 
+        Mensaje mensajePruebaDelete=Mensaje.builder()
+                .creador("Pablo")
+                .destinatario("Wilkin")
+                .contenido("Primera prueba ")
+                .build();
+        mensajeRepository.save(mensajePruebaDelete);
+        //when 
+        mensajeRepository.deleteById(mensajePruebaDelete.getId()); 
+        //then
+        assertThat(mensajeRepository.count()).isZero();
+    }
    
+    @Test
+    void givenAnMessage_whenUpdate_thenMessageDestinatarioIsEqualsTo(){
+        Mensaje mensajePruebaUpdate=Mensaje.builder()
+             .creador("Pablo") 
+             .destinatario("Wilkin") 
+             .contenido("Primera actualización mensaje")
+              .build();
+        mensajeRepository.save(mensajePruebaUpdate);
+        //when 
+        mensajeRepository.updateDescripcionById(mensajePruebaUpdate.getId(), "nuevoDestinatario");
+        //then
+        assertThat(mensajeRepository.getReferenceById(mensajePruebaUpdate.getId()).getDestinatario()).isEqualTo("nuevoDestinatario");
+    }
 }
