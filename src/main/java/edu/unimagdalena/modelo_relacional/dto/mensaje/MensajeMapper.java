@@ -4,19 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 
 import edu.unimagdalena.modelo_relacional.entidades.Mensaje;
+@Mapper
 public interface MensajeMapper {
-    @Mappings({
-        @Mapping(source="create_at",target = "create_at", dateFormat = "yyyy-MM-dd HH-mm-ss")
-    })
-    MensajeDto entityToDto(Mensaje mensaje);
-
-    @InheritInverseConfiguration
-    @Mapping(source = "create_at", target = "create_at")
-    Mensaje dtoToEntity(MensajeDto mensajeDto); 
-
-    @InheritInverseConfiguration
-    @Mapping(source = "create_at", target = "create_at")
-    Mensaje toSaveDtoToEntity(MensajeToSaveDto mensajeTosaveDto);
+    MensajeMapper INSTANCE = Mappers.getMapper(MensajeMapper.class);
+    Mensaje mensajeDtoMensaje(MensajeDto mensajeDto);
+    MensajeDto mensajeTomMensajeDto(Mensaje mensaje);
 }
